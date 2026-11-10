@@ -1,0 +1,29 @@
+# AppArmor profile for a confined demo application (logwriter).
+#
+# Built the way aa-genprof builds one: start from abstractions/base, grant the
+# binary read + memory-map-execute on itself, then add exactly the files the
+# program is observed to touch (here: a single log file it may read and append).
+# Everything not listed is denied in enforce mode.
+#
+# Install:  sudo cp profiles/usr.local.bin.logwriter /etc/apparmor.d/
+#           sudo apparmor_parser -r /etc/apparmor.d/usr.local.bin.logwriter
+#           sudo aa-enforce /usr/local/bin/logwriter
+
+abi <abi/3.0>,
+include <tunables/global>
+
+/usr/local/bin/logwriter {
+    include <abstractions/base>
+
+    # The binary itself: read (r) + memory-map executable (m).
+    /usr/local/bin/logwriter mr,
+
+    # The only data file it is allowed to touch, and only as its owner.
+    owner /var/log/logwriter/app.log rw,
+    owner /var/log/logwriter/        r,
+
+    # Deny everything sensitive explicitly (defence in depth / clarity).
+    deny /etc/shadow r,
+    deny /root/**    rwx,
+    deny network,
+}

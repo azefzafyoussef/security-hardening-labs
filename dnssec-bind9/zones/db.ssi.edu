@@ -1,0 +1,21 @@
+; Forward zone for ssi.edu
+; The two $INCLUDE lines pull in the public DNSSEC keys (ZSK then KSK);
+; dnssec-signzone reads them to produce db.ssi.edu.signed.
+$TTL    604800
+$INCLUDE "/etc/bind/keys/ssi.edu/Kssi.edu.ZSK.key"
+$INCLUDE "/etc/bind/keys/ssi.edu/Kssi.edu.KSK.key"
+@       IN      SOA     ns1.ssi.edu. admin.ssi.edu. (
+                          2024120201 ; Serial
+                          604800     ; Refresh
+                          86400      ; Retry
+                          2419200    ; Expire
+                          604800 )   ; Negative Cache TTL
+
+@       IN      NS      ns1.ssi.edu.
+@       IN      NS      ns2.ssi.edu.
+
+ns1     IN      A       10.71.105.136
+ns2     IN      A       10.71.105.191
+mail    IN      A       10.71.105.136
+
+@       IN      MX  10  mail.ssi.edu.

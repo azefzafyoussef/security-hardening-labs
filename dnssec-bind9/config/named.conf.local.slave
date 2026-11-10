@@ -1,0 +1,17 @@
+// Slave (DNSSlave) — pulls zones from the master using the shared TSIG key.
+// No per-zone content is configured here; it is fetched over the authenticated
+// transfer.
+
+include "/etc/bind/tsig.key";
+
+zone "ssi.edu" {
+    type slave;
+    masters { 10.71.105.136 key "transfer-key"; };
+    file "/var/cache/bind/slaves/db.ssi.edu";
+};
+
+zone "136.105.71.in-addr.arpa" {
+    type slave;
+    masters { 10.71.105.136 key "transfer-key"; };
+    file "/var/cache/bind/slaves/db.reverse";
+};

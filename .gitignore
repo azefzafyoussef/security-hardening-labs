@@ -1,0 +1,8 @@
+*.zip
+audit_*/
+pki-out/
+*.signed
+*.evtx
+*.reg
+__pycache__/
+*.pyc
